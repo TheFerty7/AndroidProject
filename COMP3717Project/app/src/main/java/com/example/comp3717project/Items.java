@@ -76,7 +76,7 @@ public class Items extends AppCompatActivity {
     private void initializeItemList(){
         ListView heroes = (ListView) findViewById(R.id.listView2);
         itemArray = new String[]{"Iron Branch", "Gauntlets Of Strength"};
-        idArray = new String[]{"Item id: 1", "Item id: 71"};
+        idArray = new String[]{"Item id: 1", "Item id: 73"};
 
         ArrayList<HashMap<String,String>> heroList = new ArrayList<HashMap<String,String>>();
         for(int i =0; i < itemArray.length; i++){

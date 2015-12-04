@@ -7,10 +7,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 public class HeroDetail extends AppCompatActivity {
+
+    public WebView wv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,9 +26,8 @@ public class HeroDetail extends AppCompatActivity {
         String urlEnd = intent.getStringExtra("id");
 
         String url = urlStart + urlEnd;
-
-        WebView wv = (WebView) findViewById(R.id.webView);
-        wv.setWebViewClient(new MyBrowser());
+        wv  = (WebView) findViewById(R.id.webView);
+        wv.setWebViewClient(new WebViewClient());
         wv.getSettings().setJavaScriptEnabled(true);
         wv.getSettings().setLoadsImagesAutomatically(true);
         wv.loadUrl(url);
@@ -33,12 +35,16 @@ public class HeroDetail extends AppCompatActivity {
 
        
     }
-    private class MyBrowser extends WebViewClient {
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            view.loadUrl(url);
-            return true;
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        wv  = (WebView) findViewById(R.id.webView);
+        if(wv != null){
+            wv.removeAllViews();
+            wv.destroy();
         }
+        wv = null;
     }
 
 }
