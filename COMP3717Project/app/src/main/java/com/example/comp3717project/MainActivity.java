@@ -35,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
     private ListView mainListView;
     private ArrayAdapter<String> listAdapter;
 
+    public String[] recentGameIDArray;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +79,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        initalizeRecentGames();
+
+
+    }
+
+    public void initalizeRecentGames(){
+        ListView lv = (ListView) findViewById(R.id.listView4);
+        recentGameIDArray = new String[]{"123","456"};
+
+        ArrayList<String> gameList = new ArrayList<String>();
+
+        gameList.addAll(Arrays.asList(recentGameIDArray));
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.row, gameList);
+
+        lv.setAdapter(adapter);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, RecentGames.class);
+                intent.putExtra("id", recentGameIDArray[position]);
+                startActivity(intent);
+            }
+        });
 
     }
 

@@ -10,12 +10,12 @@ import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-public class HeroDetail extends AppCompatActivity {
+public class ItemDetail extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_hero_detail);
+        setContentView(R.layout.activity_item_detail);
 
         String urlStart = "http://dota2.gamepedia.com/";
 
@@ -24,15 +24,15 @@ public class HeroDetail extends AppCompatActivity {
 
         String url = urlStart + urlEnd;
 
-        WebView wv = (WebView) findViewById(R.id.webView);
+        WebView wv = (WebView) findViewById(R.id.webView2);
         wv.setWebViewClient(new MyBrowser());
         wv.getSettings().setJavaScriptEnabled(true);
         wv.getSettings().setLoadsImagesAutomatically(true);
         wv.loadUrl(url);
 
 
-       
     }
+
     private class MyBrowser extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {

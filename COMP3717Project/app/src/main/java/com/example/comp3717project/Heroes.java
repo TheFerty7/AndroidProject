@@ -98,7 +98,7 @@ public class Heroes extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-//        heroList.addAll(Arrays.asList(heroArray));
+//        heroList.addAll(Arrays.asList(itemArray));
 //
 //        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row, heroList);
 //
