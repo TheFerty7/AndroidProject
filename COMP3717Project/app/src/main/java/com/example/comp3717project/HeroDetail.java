@@ -42,7 +42,6 @@ public class HeroDetail extends AppCompatActivity {
         wv  = (WebView) findViewById(R.id.webView);
         if(wv != null){
             wv.removeAllViews();
-            wv.destroy();
         }
         wv = null;
     }
