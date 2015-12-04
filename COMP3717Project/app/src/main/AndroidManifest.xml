@@ -22,7 +22,7 @@
             android:name=".Heroes"
             android:label="@string/title_activity_heroes" />
         <activity
-            android:name=".RecentGames"
+            android:name=".MatchActivity"
             android:label="@string/title_activity_recent_games" />
         <activity
             android:name=".Items"
@@ -31,10 +31,6 @@
             android:name=".HeroDetail"
             android:label="@string/title_activity_hero_detail"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ItemDetail"
-            android:label="@string/title_activity_item_detail"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

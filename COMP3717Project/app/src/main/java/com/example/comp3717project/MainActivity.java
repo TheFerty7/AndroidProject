@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MainActivity.this, RecentGames.class);
+                Intent intent = new Intent(MainActivity.this, MatchActivity.class);
                 intent.putExtra("id", recentGameIDArray[position]);
                 startActivity(intent);
             }
