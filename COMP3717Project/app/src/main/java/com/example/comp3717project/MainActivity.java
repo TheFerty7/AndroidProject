@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -32,18 +31,13 @@ import java.util.Arrays;
 public class MainActivity extends AppCompatActivity {
 
     private static String API_KEY = "12C01D8A57DFF90DB5C355DC37FDAB56";
+    public String[] recentGameIDArray;
     private int MATCH_REQUEST = 10;
     private int MIN_PLAYER = 5;
-
-
     private ActionBarDrawerToggle dToggle;
     private DrawerLayout dLayout;
-
     private ListView mainListView;
     private ArrayAdapter<String> listAdapter;
-
-    public String[] recentGameIDArray;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MainActivity.this, RecentGames.class);
+                Intent intent = new Intent(MainActivity.this, MatchActivity.class);
                 intent.putExtra("id", recentGameIDArray[position]);
                 startActivity(intent);
             }
@@ -171,8 +165,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d("HTTP-URL-CONNECTION", "The response is: " + response);
             in = conn.getInputStream();
 
-            String result = readIt(in);
-            return result;
+            return readIt(in);
         } finally {
             if (in != null) {
                 in.close();
@@ -180,11 +173,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private String readIt(InputStream stream) throws IOException, UnsupportedEncodingException {
-        Reader reader = null;
-        BufferedReader bufReader = null;
-        reader = new InputStreamReader(stream, "UTF-8");
-        bufReader = new BufferedReader(reader);
+    private String readIt(InputStream stream) throws IOException {
+        Reader reader = new InputStreamReader(stream, "UTF-8");
+        BufferedReader bufReader = new BufferedReader(reader);
 
         String line;
         String result = "";
