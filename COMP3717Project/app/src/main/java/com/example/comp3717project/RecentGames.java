@@ -1,7 +1,9 @@
 package com.example.comp3717project;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -11,6 +13,9 @@ public class RecentGames extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recent_games);
+
+        Intent intent = getIntent();
+        Log.d("id", intent.getStringExtra("id"));
     }
 
     @Override
