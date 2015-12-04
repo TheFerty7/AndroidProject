@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.comp3717project" >
-    
+    package="com.example.comp3717project">
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,16 +20,21 @@
         </activity>
         <activity
             android:name=".Heroes"
-            android:label="@string/title_activity_heroes" >
-        </activity>
+            android:label="@string/title_activity_heroes" />
         <activity
             android:name=".RecentGames"
-            android:label="@string/title_activity_recent_games" >
-        </activity>
+            android:label="@string/title_activity_recent_games" />
         <activity
             android:name=".Items"
-            android:label="@string/title_activity_items" >
-        </activity>
+            android:label="@string/title_activity_items" />
+        <activity
+            android:name=".HeroDetail"
+            android:label="@string/title_activity_hero_detail"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ItemDetail"
+            android:label="@string/title_activity_item_detail"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -8,12 +8,15 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.HttpAuthHandler;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class Heroes extends AppCompatActivity {
 
@@ -23,6 +26,8 @@ public class Heroes extends AppCompatActivity {
     private ListView mainListView;
     private ArrayAdapter<String> listAdapter;
 
+    public String[] heroArray;
+    public String[] idArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +69,40 @@ public class Heroes extends AppCompatActivity {
             }
         });
 
+        initializeHeroList();
 
+
+    }
+
+    private void initializeHeroList(){
+        ListView heroes = (ListView) findViewById(R.id.listView3);
+        heroArray = new String[]{"Abbadon", "Alchemist"};
+        idArray = new String[]{"Hero id: 102", "Hero id: 73"};
+
+        ArrayList<HashMap<String,String>> heroList = new ArrayList<HashMap<String,String>>();
+        for(int i =0; i <heroArray.length; i++){
+            HashMap<String,String> map = new HashMap<String,String>();
+            map.put("HeroName", heroArray[i]);
+            map.put("HeroID", idArray[i]);
+            heroList.add(map);
+
+        }
+        SimpleAdapter adapter = new SimpleAdapter(this, heroList, android.R.layout.simple_list_item_2, new String[]{"HeroName", "HeroID"}, new int[] {android.R.id.text1, android.R.id.text2});
+        heroes.setAdapter(adapter);
+
+        heroes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(Heroes.this, HeroDetail.class);
+                intent.putExtra("id", heroArray[position]);
+                startActivity(intent);
+            }
+        });
+//        heroList.addAll(Arrays.asList(itemArray));
+//
+//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row, heroList);
+//
+//        heroes.setAdapter(adapter);
     }
 
     private void setUpDrawer(){

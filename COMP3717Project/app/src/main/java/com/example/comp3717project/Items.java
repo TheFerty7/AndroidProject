@@ -11,9 +11,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class Items extends AppCompatActivity {
 
@@ -22,6 +24,9 @@ public class Items extends AppCompatActivity {
 
     private ListView mainListView;
     private ArrayAdapter<String> listAdapter;
+
+    public String[] itemArray;
+    public String[] idArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +68,40 @@ public class Items extends AppCompatActivity {
             }
         });
 
+        initializeItemList();
 
+
+    }
+
+    private void initializeItemList(){
+        ListView heroes = (ListView) findViewById(R.id.listView2);
+        itemArray = new String[]{"Iron Branch", "Gauntlets Of Strength"};
+        idArray = new String[]{"Item id: 1", "Item id: 73"};
+
+        ArrayList<HashMap<String,String>> heroList = new ArrayList<HashMap<String,String>>();
+        for(int i =0; i < itemArray.length; i++){
+            HashMap<String,String> map = new HashMap<String,String>();
+            map.put("HeroName", itemArray[i]);
+            map.put("HeroID", idArray[i]);
+            heroList.add(map);
+
+        }
+        SimpleAdapter adapter = new SimpleAdapter(this, heroList, android.R.layout.simple_list_item_2, new String[]{"HeroName", "HeroID"}, new int[] {android.R.id.text1, android.R.id.text2});
+        heroes.setAdapter(adapter);
+
+        heroes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(Items.this, HeroDetail.class);
+                intent.putExtra("id", itemArray[position]);
+                startActivity(intent);
+            }
+        });
+//        heroList.addAll(Arrays.asList(itemArray));
+//
+//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row, heroList);
+//
+//        heroes.setAdapter(adapter);
     }
 
     private void setUpDrawer(){
