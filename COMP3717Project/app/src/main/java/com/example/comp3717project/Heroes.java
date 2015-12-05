@@ -2,15 +2,14 @@ package com.example.comp3717project;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.HttpAuthHandler;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -25,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -35,22 +33,31 @@ import java.util.HashMap;
 public class Heroes extends AppCompatActivity {
 
 
+    public String[] heroesArray;
+    String matchID;
     private ActionBarDrawerToggle dToggle;
     private DrawerLayout dLayout;
-
     private ListView mainListView;
     private ArrayAdapter<String> listAdapter;
-
-    public String[] heroesArray;
-
+    private String heroID;
+    private boolean flag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_heroes);
 
-        String stringUrl = "https://api.steampowered.com/IEconDOTA2_570/GetHeroes/v0001/?key=F7EB0CA4154233ABB155C2C98DEF9D02&language=en_us";
+        Toast.makeText(getApplicationContext(), "IT'S LOADING", Toast.LENGTH_SHORT).show();
 
+        Intent intent = getIntent();
+
+        if (intent.hasExtra("2step")) {
+            flag = intent.getBooleanExtra("2step", false);
+            heroID = intent.getStringExtra("id");
+            matchID = intent.getStringExtra("match");
+        }
+
+        String stringUrl = "https://api.steampowered.com/IEconDOTA2_570/GetHeroes/v0001/?key=F7EB0CA4154233ABB155C2C98DEF9D02&language=en_us";
 
         new DownloadWebpageTask().execute(stringUrl);
 
@@ -91,24 +98,22 @@ public class Heroes extends AppCompatActivity {
         });
 
 
-
-
     }
 
-    private void initializeHeroList(String[] heroArray, String[] idArray){
+    private void initializeHeroList(String[] heroArray, String[] idArray) {
         ListView heroes = (ListView) findViewById(R.id.listView3);
 
         heroesArray = heroArray;
 
-        ArrayList<HashMap<String,String>> heroList = new ArrayList<HashMap<String,String>>();
-        for(int i =0; i <heroArray.length; i++){
-            HashMap<String,String> map = new HashMap<String,String>();
+        ArrayList<HashMap<String, String>> heroList = new ArrayList<HashMap<String, String>>();
+        for (int i = 0; i < heroArray.length; i++) {
+            HashMap<String, String> map = new HashMap<String, String>();
             map.put("HeroName", heroArray[i]);
             map.put("HeroID", idArray[i]);
             heroList.add(map);
 
         }
-        SimpleAdapter adapter = new SimpleAdapter(this, heroList, android.R.layout.simple_list_item_2, new String[]{"HeroName", "HeroID"}, new int[] {android.R.id.text1, android.R.id.text2});
+        SimpleAdapter adapter = new SimpleAdapter(this, heroList, android.R.layout.simple_list_item_2, new String[]{"HeroName", "HeroID"}, new int[]{android.R.id.text1, android.R.id.text2});
         heroes.setAdapter(adapter);
 
         heroes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -126,7 +131,7 @@ public class Heroes extends AppCompatActivity {
 //        heroes.setAdapter(adapter);
     }
 
-    private void setUpDrawer(){
+    private void setUpDrawer() {
         dToggle = new ActionBarDrawerToggle(this, dLayout,
                 R.string.open, R.string.close) {
         };
@@ -155,6 +160,7 @@ public class Heroes extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
     private String downloadUrl(String myurl) throws Exception {
         InputStream in = null;
         try {
@@ -180,7 +186,7 @@ public class Heroes extends AppCompatActivity {
         }
     }
 
-    private String readIt(InputStream stream) throws IOException, UnsupportedEncodingException {
+    private String readIt(InputStream stream) throws IOException {
         Reader reader = null;
         BufferedReader bufReader = null;
         reader = new InputStreamReader(stream, "UTF-8");
@@ -221,8 +227,16 @@ public class Heroes extends AppCompatActivity {
 
                 for (int i = 0; i < matches.length(); i++) {
                     name[i] = matches.getJSONObject(i).getString("localized_name");
-                    int temp =  matches.getJSONObject(i).getInt("id");
+                    int temp = matches.getJSONObject(i).getInt("id");
                     id[i] = String.valueOf(temp);
+                }
+
+                if (flag) {
+                    Intent intent = new Intent(Heroes.this, HeroDetail.class);
+                    intent.putExtra("id", name[Integer.parseInt(heroID) - 1]);
+                    intent.putExtra("2step", flag);
+                    intent.putExtra("match", flag);
+                    startActivity(intent);
                 }
 
                 initializeHeroList(name, id);

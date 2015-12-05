@@ -30,10 +30,11 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static String API_KEY = "12C01D8A57DFF90DB5C355DC37FDAB56";
+    public static String API_KEY = "12C01D8A57DFF90DB5C355DC37FDAB56";
+    public static int MATCH_REQUEST = 10;
+    public static int MIN_PLAYER = 5;
+
     public String[] recentGameIDArray;
-    private int MATCH_REQUEST = 10;
-    private int MIN_PLAYER = 5;
     private ActionBarDrawerToggle dToggle;
     private DrawerLayout dLayout;
     private ListView mainListView;
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        Toast.makeText(getApplicationContext(), "Hold on it's loading", Toast.LENGTH_SHORT).show();
         // Call to API and retrieve match data
         String stringUrl = "https://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/V001/?" +
                 "key=" + API_KEY +
@@ -204,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
                 if (result.equalsIgnoreCase("error404"))
                     Toast.makeText(getApplicationContext(), "Unable to retrieve web page at the moment", Toast.LENGTH_LONG).show();
 
+                Toast.makeText(getApplicationContext(), "Finished", Toast.LENGTH_SHORT).show();
                 // Start json parser
                 JSONObject json = new JSONObject(result);
                 JSONArray matches = json.getJSONObject("result").getJSONArray("matches");

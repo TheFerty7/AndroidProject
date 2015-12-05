@@ -2,10 +2,10 @@ package com.example.comp3717project;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -33,18 +32,18 @@ import java.util.HashMap;
 
 public class Items extends AppCompatActivity {
 
+    public String[] itemsArray;
     private ActionBarDrawerToggle dToggle;
     private DrawerLayout dLayout;
-
     private ListView mainListView;
     private ArrayAdapter<String> listAdapter;
-
-    public String[] itemsArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_items);
+
+        Toast.makeText(getApplicationContext(), "IT'S LOADING", Toast.LENGTH_LONG).show();
 
         // Call to API and retrieve match data
         String stringUrl = "https://api.steampowered.com/IEconDOTA2_570/GetGameItems/V001/?key=F7EB0CA4154233ABB155C2C98DEF9D02&language=en_us";
@@ -176,7 +175,7 @@ public class Items extends AppCompatActivity {
         }
     }
 
-    private String readIt(InputStream stream) throws IOException, UnsupportedEncodingException {
+    private String readIt(InputStream stream) throws IOException {
         Reader reader = null;
         BufferedReader bufReader = null;
         reader = new InputStreamReader(stream, "UTF-8");

@@ -2,45 +2,48 @@ package com.example.comp3717project;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 public class HeroDetail extends AppCompatActivity {
 
     public WebView wv;
+    private boolean flag = false;
+    private String match;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hero_detail);
 
+        Toast.makeText(getApplicationContext(), "EXTRA LOADING TIME", Toast.LENGTH_LONG).show();
+
         String urlStart = "http://dota2.gamepedia.com/";
 
         Intent intent = getIntent();
         String urlEnd = intent.getStringExtra("id");
 
+        if (intent.hasExtra("2step")) {
+            flag = intent.getBooleanExtra("2step", false);
+            match = intent.getStringExtra("match");
+        }
+
         String url = urlStart + urlEnd;
-        wv  = (WebView) findViewById(R.id.webView);
+        wv = (WebView) findViewById(R.id.webView);
         wv.setWebViewClient(new WebViewClient());
         wv.getSettings().setJavaScriptEnabled(true);
         wv.getSettings().setLoadsImagesAutomatically(true);
         wv.loadUrl(url);
 
-
-       
     }
 
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         super.onDestroy();
-        wv  = (WebView) findViewById(R.id.webView);
-        if(wv != null){
+        wv = (WebView) findViewById(R.id.webView);
+        if (wv != null) {
             wv.removeAllViews();
         }
         wv = null;
