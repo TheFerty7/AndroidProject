@@ -31,8 +31,8 @@ import java.util.Arrays;
 public class MainActivity extends AppCompatActivity {
 
     public static String API_KEY = "12C01D8A57DFF90DB5C355DC37FDAB56";
-    public static int MATCH_REQUEST = 10;
-    public static int MIN_PLAYER = 5;
+    public static int MATCH_REQUEST = 25;
+    public static int MIN_PLAYER = 10;
 
     public String[] recentGameIDArray;
     private ActionBarDrawerToggle dToggle;

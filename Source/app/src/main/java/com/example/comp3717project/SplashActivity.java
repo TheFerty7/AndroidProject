@@ -1,11 +1,19 @@
 package com.example.comp3717project;
 
-import android.content.Intent;
-import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class SplashActivity extends Activity {
+
+    private final int LOADING_TIME = 10;
+
+    TextView status;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,25 +23,55 @@ public class SplashActivity extends Activity {
         ImageView image = (ImageView) findViewById(R.id.imageView);
         image.setImageResource(R.drawable.photo);
 
-        Thread welcomeThread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    super.run();
-                    sleep(10000);
-                } catch (Exception e) {
+        Context context = this.getApplicationContext();
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-                } finally {
+        status = (TextView) findViewById(R.id.txtStatus);
 
-                    Intent i = new Intent(SplashActivity.this,
-                            MainActivity.class);
-                    startActivity(i);
-                    finish();
+        boolean isConnected;
+
+        while ((isConnected = (cm.getActiveNetworkInfo() == null &&
+                cm.getActiveNetworkInfo().isConnectedOrConnecting())) != true) {
+            status.setText("Please enable internet connection!");
+        }
+
+        new LoadingTask().execute();
+    }
+
+    private class LoadingTask extends AsyncTask<Integer, String, Void> {
+        int i = LOADING_TIME;
+
+        @Override
+        protected Void doInBackground(final Integer... params) {
+            new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        while (i != 0) {
+                            publishProgress("System loading time: " + i);
+                            i--;
+                            Thread.sleep(1000);
+                        }
+                    } catch (Exception e) {
+                    }
                 }
-            }
-        };
-        welcomeThread.start();
+            }.run();
+            return null;
+        }
 
+        @Override
+        protected void onProgressUpdate(String... values) {
+            status.setText(values[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            Intent intent = new Intent(SplashActivity.this,
+                    MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
 }
