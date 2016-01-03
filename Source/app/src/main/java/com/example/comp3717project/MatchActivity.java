@@ -99,8 +99,8 @@ public class MatchActivity extends AppCompatActivity {
 //                Intent intent = new Intent(MainActivity.this, MatchActivity.class);
 //                intent.putExtra("id", recentGameIDArray[position]);
 //                startActivity(intent);
-                Intent intent = new Intent(MatchActivity.this, Heroes.class);
-                intent.putExtra("id", heroIdArray[position]);
+                Intent intent = new Intent(MatchActivity.this, PlayerDetail.class);
+                intent.putExtra("id", MainActivity.heroNames[position]);
                 intent.putExtra("2step", true);
                 intent.putExtra("match", matchID.getText());
                 startActivity(intent);

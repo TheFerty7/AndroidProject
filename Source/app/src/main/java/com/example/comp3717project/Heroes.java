@@ -1,6 +1,10 @@
 package com.example.comp3717project;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -26,6 +30,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -57,9 +62,11 @@ public class Heroes extends AppCompatActivity {
             matchID = intent.getStringExtra("match");
         }
 
-        String stringUrl = "https://api.steampowered.com/IEconDOTA2_570/GetHeroes/v0001/?key=F7EB0CA4154233ABB155C2C98DEF9D02&language=en_us";
+        //String stringUrl = "https://api.steampowered.com/IEconDOTA2_570/GetHeroes/v0001/?key=F7EB0CA4154233ABB155C2C98DEF9D02&language=en_us";
 
-        new DownloadWebpageTask().execute(stringUrl);
+        //new DownloadWebpageTask().execute(stringUrl);
+
+        initializeHeroList(MainActivity.heroNames, MainActivity.heroIDs);
 
         mainListView = (ListView) findViewById(R.id.navList3);
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
@@ -103,7 +110,7 @@ public class Heroes extends AppCompatActivity {
     private void initializeHeroList(String[] heroArray, String[] idArray) {
         ListView heroes = (ListView) findViewById(R.id.listView3);
 
-        heroesArray = heroArray;
+        heroesArray = MainActivity.heroNames;
 
         ArrayList<HashMap<String, String>> heroList = new ArrayList<HashMap<String, String>>();
         for (int i = 0; i < heroArray.length; i++) {
@@ -124,11 +131,6 @@ public class Heroes extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-//        heroList.addAll(Arrays.asList(itemArray));
-//
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row, heroList);
-//
-//        heroes.setAdapter(adapter);
     }
 
     private void setUpDrawer() {
@@ -239,7 +241,7 @@ public class Heroes extends AppCompatActivity {
                     startActivity(intent);
                 }
 
-                initializeHeroList(name, id);
+                //initializeHeroList(name, id);
             } catch (Exception ex) {
                 Log.d("Problem", ex.getMessage());
             }

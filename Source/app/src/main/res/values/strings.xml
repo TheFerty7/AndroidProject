@@ -13,4 +13,5 @@
     <string name="title_activity_hero_detail">Details</string>
     <string name="title_activity_item_detail">ItemDetail</string>
     <string name="title_activity_splash">SplashActivity</string>
+    <string name="title_activity_player_detail">PlayerDetail</string>
 </resources>

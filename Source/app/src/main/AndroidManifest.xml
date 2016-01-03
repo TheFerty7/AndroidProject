@@ -3,28 +3,27 @@
     package="com.example.comp3717project">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
-
         <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
 
         <activity
             android:name=".SplashActivity"
+            android:label="@string/app_name"></activity>
+        <activity
+            android:name=".MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name" />
-
         <activity
             android:name=".Heroes"
             android:label="@string/title_activity_heroes" />
@@ -38,7 +37,9 @@
             android:name=".HeroDetail"
             android:label="@string/title_activity_hero_detail"
             android:theme="@style/AppTheme.NoActionBar" />
-
+        <activity
+            android:name=".PlayerDetail"
+            android:label="@string/title_activity_player_detail"></activity>
     </application>
 
 </manifest>

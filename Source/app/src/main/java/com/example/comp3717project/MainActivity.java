@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -27,12 +28,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
     public static String API_KEY = "12C01D8A57DFF90DB5C355DC37FDAB56";
     public static int MATCH_REQUEST = 25;
     public static int MIN_PLAYER = 10;
+
+    public static String[] heroNames;
+    public static String[] heroIDs;
 
     public String[] recentGameIDArray;
     private ActionBarDrawerToggle dToggle;
@@ -46,6 +51,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toast.makeText(getApplicationContext(), "Hold on it's loading", Toast.LENGTH_SHORT).show();
         // Call to API and retrieve match data
+        String url = "https://api.steampowered.com/IEconDOTA2_570/GetHeroes/v0001/?key=F7EB0CA4154233ABB155C2C98DEF9D02&language=en_us";
+
+        new DownloadHeroesTask().execute(url);
+
         String stringUrl = "https://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/V001/?" +
                 "key=" + API_KEY +
                 "&matches_requested=" + MATCH_REQUEST +
@@ -222,4 +231,43 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    private class DownloadHeroesTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+            try {
+                return downloadUrl(urls[0]);
+            } catch (Exception e) {
+                Log.e("Problem", e.getMessage());
+                return "error404";
+            }
+        }
+
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                if (result.equalsIgnoreCase("error404"))
+                    Toast.makeText(getApplicationContext(), "Unable to retrieve web page at the moment", Toast.LENGTH_LONG).show();
+
+                // Start json parser
+                JSONObject json = new JSONObject(result);
+                JSONArray matches = json.getJSONObject("result").getJSONArray("heroes");
+                String[] name = new String[matches.length()];
+                String[] id = new String[matches.length()];
+
+                for (int i = 0; i < matches.length(); i++) {
+                    name[i] = matches.getJSONObject(i).getString("localized_name");
+                    int temp = matches.getJSONObject(i).getInt("id");
+                    id[i] = String.valueOf(temp);
+                }
+                heroNames = name;
+                heroIDs = id;
+            } catch (Exception ex) {
+                Log.d("Problem", ex.getMessage());
+            }
+        }
+    }
+
+
 }
