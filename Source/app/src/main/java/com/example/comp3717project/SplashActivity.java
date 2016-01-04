@@ -15,6 +15,8 @@ public class SplashActivity extends Activity {
 
     TextView status;
 
+    ConnectivityManager cm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,17 +26,9 @@ public class SplashActivity extends Activity {
         image.setImageResource(R.drawable.photo);
 
         Context context = this.getApplicationContext();
-        ConnectivityManager cm =
-                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         status = (TextView) findViewById(R.id.txtStatus);
-
-        boolean isConnected;
-
-        while ((isConnected = (cm.getActiveNetworkInfo() == null &&
-                cm.getActiveNetworkInfo().isConnectedOrConnecting())) != true) {
-            status.setText("Please enable internet connection!");
-        }
 
         new LoadingTask().execute();
     }
@@ -44,6 +38,12 @@ public class SplashActivity extends Activity {
 
         @Override
         protected Void doInBackground(final Integer... params) {
+            while (cm.getActiveNetworkInfo() == null
+                    || !cm.getActiveNetworkInfo().isAvailable()
+                    || !cm.getActiveNetworkInfo().isConnected()) {
+                publishProgress("Please enable internet connection!");
+            }
+
             new Thread() {
                 @Override
                 public void run() {
