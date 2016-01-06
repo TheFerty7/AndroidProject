@@ -155,8 +155,8 @@ public class SplashActivity extends Activity {
         protected void onPostExecute(Void aVoid) {
             Intent intent = new Intent(SplashActivity.this,
                     MainActivity.class);
-//            startActivity(intent);
-//            finish();
+            startActivity(intent);
+            finish();
         }
     }
 }

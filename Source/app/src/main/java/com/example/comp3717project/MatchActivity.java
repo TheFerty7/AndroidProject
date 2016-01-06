@@ -52,7 +52,7 @@ public class MatchActivity extends AppCompatActivity {
 
         // Call to API and retrieve match data
         String stringUrl = "https://api.steampowered.com/IDOTA2Match_570/GetMatchDetails/V001/?" +
-                "key=" + MainActivity.API_KEY +
+                "key=" + SplashActivity.API_KEY +
                 "&match_id=" + id;
 
         new DownloadWebpageTask().execute(stringUrl);
