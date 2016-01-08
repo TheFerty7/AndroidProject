@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
 
         idList = gameList;
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row, dataList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row2, dataList);
 
         lv.setAdapter(adapter);
 
