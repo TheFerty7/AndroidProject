@@ -1,5 +1,6 @@
 package com.example.comp3717project;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -36,7 +37,6 @@ public class MatchActivity extends AppCompatActivity {
     TextView radiantWin;
     private String[] playerIdArray;
     private String[] heroIdArray;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
