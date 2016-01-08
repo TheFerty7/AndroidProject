@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
         gameList.addAll(Arrays.asList(recentGameIDArray));
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row2, gameList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row, gameList);
 
         lv.setAdapter(adapter);
 

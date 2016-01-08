@@ -10,8 +10,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.comp3717project.HeroDetail"
-    tools:showIn="@layout/activity_hero_detail"
-    android:background="@color/red">
+    tools:showIn="@layout/activity_hero_detail">
 
     <WebView
         android:layout_width="wrap_content"

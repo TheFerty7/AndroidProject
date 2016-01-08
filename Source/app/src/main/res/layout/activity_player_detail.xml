@@ -7,8 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.comp3717project.PlayerDetail"
-    android:background="@color/red">
+    tools:context="com.example.comp3717project.PlayerDetail">
 
     <WebView
         android:layout_width="wrap_content"
@@ -16,5 +15,4 @@
         android:id="@+id/webView3"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
-
 </RelativeLayout>

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class PlayerDetail extends Activity {
@@ -30,7 +29,6 @@ public class PlayerDetail extends Activity {
         wv3.getSettings().setJavaScriptEnabled(true);
         wv3.getSettings().setLoadsImagesAutomatically(true);
         wv3.loadUrl(url);
-
 
     }
 
