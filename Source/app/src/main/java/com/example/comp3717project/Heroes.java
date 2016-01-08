@@ -1,11 +1,6 @@
 package com.example.comp3717project;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -15,12 +10,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -33,7 +26,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -54,8 +46,6 @@ public class Heroes extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_heroes);
-
-        Toast.makeText(getApplicationContext(), "IT'S LOADING", Toast.LENGTH_SHORT).show();
 
         Intent intent = getIntent();
 
@@ -222,7 +212,7 @@ public class Heroes extends AppCompatActivity {
         protected void onPostExecute(String result) {
             try {
                 if (result.equalsIgnoreCase("error404"))
-                    Toast.makeText(getApplicationContext(), "Unable to retrieve web page at the moment", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Unable to retrieve from API", Toast.LENGTH_LONG).show();
 
                 // Start json parser
                 JSONObject json = new JSONObject(result);

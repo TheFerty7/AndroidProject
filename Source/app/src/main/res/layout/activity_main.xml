@@ -13,14 +13,6 @@
         android:paddingTop="10dp"
         tools:context=".MainActivity">
 
-        <ListView
-            android:id="@+id/listView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="110dp" />
-
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
@@ -30,6 +22,23 @@
             android:layout_marginTop="41dp"
             android:text="Recent Games"
             android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ListView
+                android:id="@+id/listView4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="110dp" />
+
+        </LinearLayout>
+
     </RelativeLayout>
 
     <ListView

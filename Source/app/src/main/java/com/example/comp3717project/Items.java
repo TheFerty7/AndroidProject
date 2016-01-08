@@ -89,20 +89,20 @@ public class Items extends AppCompatActivity {
 
     }
 
-    private void initializeItemList(String[] itemArray, String[] idArray){
+    private void initializeItemList(String[] itemArray, String[] idArray) {
         ListView heroes = (ListView) findViewById(R.id.listView2);
 
         itemsArray = itemArray;
 
-        ArrayList<HashMap<String,String>> heroList = new ArrayList<HashMap<String,String>>();
-        for(int i =0; i < itemArray.length; i++){
-            HashMap<String,String> map = new HashMap<String,String>();
+        ArrayList<HashMap<String, String>> heroList = new ArrayList<HashMap<String, String>>();
+        for (int i = 0; i < itemArray.length; i++) {
+            HashMap<String, String> map = new HashMap<String, String>();
             map.put("HeroName", itemArray[i]);
             map.put("HeroID", idArray[i]);
             heroList.add(map);
 
         }
-        SimpleAdapter adapter = new SimpleAdapter(this, heroList, android.R.layout.simple_list_item_2, new String[]{"HeroName", "HeroID"}, new int[] {android.R.id.text1, android.R.id.text2});
+        SimpleAdapter adapter = new SimpleAdapter(this, heroList, android.R.layout.simple_list_item_2, new String[]{"HeroName", "HeroID"}, new int[]{android.R.id.text1, android.R.id.text2});
         heroes.setAdapter(adapter);
 
         heroes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -120,7 +120,7 @@ public class Items extends AppCompatActivity {
 //        heroes.setAdapter(adapter);
     }
 
-    private void setUpDrawer(){
+    private void setUpDrawer() {
         dToggle = new ActionBarDrawerToggle(this, dLayout,
                 R.string.open, R.string.close) {
         };
@@ -206,7 +206,7 @@ public class Items extends AppCompatActivity {
         protected void onPostExecute(String result) {
             try {
                 if (result.equalsIgnoreCase("error404"))
-                    Toast.makeText(getApplicationContext(), "Unable to retrieve web page at the moment", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Unable to retrieve from API", Toast.LENGTH_LONG).show();
 
                 // Start json parser
                 JSONObject json = new JSONObject(result);
@@ -216,7 +216,7 @@ public class Items extends AppCompatActivity {
 
                 for (int i = 0; i < matches.length(); i++) {
                     name[i] = matches.getJSONObject(i).getString("localized_name");
-                    int temp =  matches.getJSONObject(i).getInt("cost");
+                    int temp = matches.getJSONObject(i).getInt("cost");
                     String t = String.valueOf(temp);
                     id[i] = "Cost: " + t;
                 }

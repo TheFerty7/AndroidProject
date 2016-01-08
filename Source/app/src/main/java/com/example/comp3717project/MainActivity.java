@@ -1,6 +1,8 @@
 package com.example.comp3717project;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -13,7 +15,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -28,18 +29,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
-
-    public static String API_KEY = "12C01D8A57DFF90DB5C355DC37FDAB56";
-    public static int MATCH_REQUEST = 25;
-    public static int MIN_PLAYER = 10;
-
     public static String[] heroNames;
     public static String[] heroIDs;
-
-    public String[] recentGameIDArray;
+    ArrayList<String> idList;
     private ActionBarDrawerToggle dToggle;
     private DrawerLayout dLayout;
     private ListView mainListView;
@@ -49,18 +44,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toast.makeText(getApplicationContext(), "Hold on it's loading", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Loading", Toast.LENGTH_SHORT).show();
         // Call to API and retrieve match data
         String url = "https://api.steampowered.com/IEconDOTA2_570/GetHeroes/v0001/?key=F7EB0CA4154233ABB155C2C98DEF9D02&language=en_us";
 
         new DownloadHeroesTask().execute(url);
-
-        String stringUrl = "https://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/V001/?" +
-                "key=" + API_KEY +
-                "&matches_requested=" + MATCH_REQUEST +
-                "&min_players=" + MIN_PLAYER;
-
-        new DownloadWebpageTask().execute(stringUrl);
 
         // Grant default value for ListView
         try {
@@ -96,45 +84,15 @@ public class MainActivity extends AppCompatActivity {
                         Intent intent = new Intent(MainActivity.this, Items.class);
                         startActivity(intent);
                     }
-
                 }
             });
 
         } catch (NullPointerException ex) {
             Log.e("List View problem", ex.getMessage());
         }
-    }
 
-    public void initRecentGames(String[] id) {
-        ListView lv = (ListView) findViewById(R.id.listView4);
-
-        recentGameIDArray = id;
-
-        ArrayList<String> gameList = new ArrayList<String>();
-
-        gameList.addAll(Arrays.asList(recentGameIDArray));
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row2, gameList);
-
-        lv.setAdapter(adapter);
-
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MainActivity.this, MatchActivity.class);
-                intent.putExtra("id", recentGameIDArray[position]);
-                startActivity(intent);
-            }
-        });
-
-    }
-
-    private void setUpDrawer() {
-        dToggle = new ActionBarDrawerToggle(this, dLayout,
-                R.string.open, R.string.close) {
-        };
-        dToggle.setDrawerIndicatorEnabled(true);
-        dLayout.setDrawerListener(dToggle);
+        // Call data from sqlite
+        initRecentGames();
     }
 
     @Override
@@ -157,6 +115,57 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void initRecentGames() {
+        ListView lv = (ListView) findViewById(R.id.listView4);
+        ArrayList<String> gameList = new ArrayList<String>();
+        ArrayList<String> dataList = new ArrayList<String>();
+
+        // Assign SQLite select parameters
+        SQLiteDatabase db = new AppDatabaseHelper(this).getReadableDatabase();
+        String[] tableColumns = new String[]{
+                AppDatabaseHelper.MATCH_ID,
+                AppDatabaseHelper.MATCH_SEQ_NUM,
+                AppDatabaseHelper.MATCH_TIME,
+                AppDatabaseHelper.MATCH_LOBBY
+        };
+        Cursor c = db.query(AppDatabaseHelper.MATCH_TABLE, tableColumns, null, null,
+                null, null, AppDatabaseHelper.MATCH_ID + " DESC", "10");
+        if (c != null) {
+            if (c.moveToFirst())
+                do {
+                    gameList.add(c.getString(0));
+                    Date date = new Date(Long.parseLong(c.getString(2)) * 1000L); // *1000 is to convert seconds to milliseconds
+                    Date date1 = new java.util.Date();
+                    long diff = date1.getTime() - date.getTime();
+                    dataList.add("Match " + c.getString(0) + ": " + (diff / 1000 / 60) + " minutes ago");
+                } while (c.moveToNext());
+        }
+
+        idList = gameList;
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row, dataList);
+
+        lv.setAdapter(adapter);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, MatchActivity.class);
+                String cid = idList.get(position);
+                intent.putExtra("id", cid);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void setUpDrawer() {
+        dToggle = new ActionBarDrawerToggle(this, dLayout,
+                R.string.open, R.string.close) {
+        };
+        dToggle.setDrawerIndicatorEnabled(true);
+        dLayout.setDrawerListener(dToggle);
     }
 
     private String downloadUrl(String myurl) throws Exception {
@@ -196,42 +205,6 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
-    private class DownloadWebpageTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... urls) {
-            try {
-                return downloadUrl(urls[0]);
-            } catch (Exception e) {
-                Log.e("Problem", e.getMessage());
-                return "error404";
-            }
-        }
-
-        // onPostExecute displays the results of the AsyncTask.
-        @Override
-        protected void onPostExecute(String result) {
-            try {
-                if (result.equalsIgnoreCase("error404"))
-                    Toast.makeText(getApplicationContext(), "Unable to retrieve web page at the moment", Toast.LENGTH_LONG).show();
-
-                Toast.makeText(getApplicationContext(), "Finished", Toast.LENGTH_SHORT).show();
-                // Start json parser
-                JSONObject json = new JSONObject(result);
-                JSONArray matches = json.getJSONObject("result").getJSONArray("matches");
-                String[] id = new String[matches.length()];
-
-                for (int i = 0; i < matches.length(); i++) {
-                    id[i] = matches.getJSONObject(i).getString("match_id");
-
-                }
-
-                initRecentGames(id);
-            } catch (Exception ex) {
-                Log.d("Problem", ex.getMessage());
-            }
-        }
-    }
-
     private class DownloadHeroesTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
@@ -248,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             try {
                 if (result.equalsIgnoreCase("error404"))
-                    Toast.makeText(getApplicationContext(), "Unable to retrieve web page at the moment", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Unable to retrieve from API", Toast.LENGTH_LONG).show();
 
                 // Start json parser
                 JSONObject json = new JSONObject(result);

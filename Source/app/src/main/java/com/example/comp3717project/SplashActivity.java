@@ -105,37 +105,54 @@ public class SplashActivity extends Activity {
                     || !cm.getActiveNetworkInfo().isConnected()) {
                 publishProgress("Please enable internet connection!");
             }
+
             new Thread() {
                 @Override
                 public void run() {
                     try {
                         publishProgress("Calling to API");
-                        String result = downloadUrl(params[0]);
+                        String result = "";
+                        boolean flag = false;
 
-                        if (result.equalsIgnoreCase("error404"))
-                            publishProgress("Unable to retrieve web page at the moment");
-
-                        publishProgress("Loading data");
-                        Thread.sleep(1500);
-                        // Start json parser
-                        JSONObject json = new JSONObject(result);
-                        JSONArray matches = json.getJSONObject("result").getJSONArray("matches");
-
-                        for (int i = 0; i < matches.length(); i++) {
-                            String id = matches.getJSONObject(i).getString("match_id");
-                            long seq_num = matches.getJSONObject(i).getLong("match_seq_num");
-                            String start_time = matches.getJSONObject(i).getString("start_time");
-                            String lobby_type = matches.getJSONObject(i).getString("lobby_type");
-
-                            Log.d("Match_", id + " seq_" + seq_num + " start_" + start_time + " lobby_" + lobby_type);
-
-                            ((AppDatabaseHelper) helper).insertMatch(helper.getWritableDatabase(), id, seq_num, start_time, lobby_type);
+                        for (int i = 0; i < 3; i++) {
+                            result = downloadUrl(params[0]);
+                            if (result.equalsIgnoreCase("error404") || result.length() < 100) {
+                                flag = true;
+                                for (int j = 5; j > 0; j--) {
+                                    publishProgress("Unable to retrieve data. Retry in " + j + " seconds");
+                                    Thread.sleep(1000);
+                                }
+                            } else {
+                                flag = false;
+                                break;
+                            }
                         }
 
-                        while (i != 0) {
-                            publishProgress("Application starts in " + i + " sec");
-                            i--;
-                            Thread.sleep(1000);
+                        if (flag) {
+                            publishProgress("Unable to connect to Valve API.");
+                            Thread.sleep(1500);
+                        } else {
+                            publishProgress("Loading data");
+                            Thread.sleep(1500);
+
+                            // Start json parser
+                            JSONObject json = new JSONObject(result);
+                            JSONArray matches = json.getJSONObject("result").getJSONArray("matches");
+
+                            for (int i = 0; i < matches.length(); i++) {
+                                String id = matches.getJSONObject(i).getString("match_id");
+                                long seq_num = matches.getJSONObject(i).getLong("match_seq_num");
+                                String start_time = matches.getJSONObject(i).getString("start_time");
+                                String lobby_type = matches.getJSONObject(i).getString("lobby_type");
+
+                                Log.d("Match_", id + " seq_" + seq_num + " start_" + start_time + " lobby_" + lobby_type);
+
+                                ((AppDatabaseHelper) helper).insertMatch(helper.getWritableDatabase(), id, seq_num, start_time, lobby_type);
+                            }
+                            for (int i = 5; i > 0; i--) {
+                                publishProgress("Application starts in " + i + " sec");
+                                Thread.sleep(1000);
+                            }
                         }
                     } catch (Exception ex) {
                         Log.e("Problem", ex.getMessage());
@@ -155,8 +172,8 @@ public class SplashActivity extends Activity {
         protected void onPostExecute(Void aVoid) {
             Intent intent = new Intent(SplashActivity.this,
                     MainActivity.class);
-//            startActivity(intent);
-//            finish();
+            startActivity(intent);
+            finish();
         }
     }
 }
