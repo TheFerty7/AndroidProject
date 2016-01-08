@@ -28,7 +28,7 @@ public class SplashActivity extends Activity {
     public static final int MATCH_REQUEST = 100;
     public static final int MIN_PLAYER = 10;
     private static final int APP_WAIT_TIME = 3;
-    private static final int LOADING_TIME = 3;
+    private static final int API_RETRY_NUMBER = 3;
 
     private SQLiteOpenHelper helper;
     private TextView status;
@@ -98,8 +98,6 @@ public class SplashActivity extends Activity {
     }
 
     private class LoadingTask extends AsyncTask<String, String, Void> {
-        int i = LOADING_TIME;
-
         @Override
         protected Void doInBackground(final String... params) {
             while (cm.getActiveNetworkInfo() == null
@@ -116,7 +114,7 @@ public class SplashActivity extends Activity {
                         String result = "";
                         boolean flag = false;
 
-                        for (int i = 0; i < 3; i++) {
+                        for (int i = 0; i < API_RETRY_NUMBER; i++) {
                             result = downloadUrl(params[0]);
                             if (result.equalsIgnoreCase("error404") || result.length() < 100) {
                                 flag = true;

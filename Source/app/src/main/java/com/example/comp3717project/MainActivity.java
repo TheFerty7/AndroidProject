@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toast.makeText(getApplicationContext(), "Loading", Toast.LENGTH_SHORT).show();
         // Call to API and retrieve match data
-        String url = "https://api.steampowered.com/IEconDOTA2_570/GetHeroes/v0001/?key=F7EB0CA4154233ABB155C2C98DEF9D02&language=en_us";
+        String url = "https://api.steampowered.com/IEconDOTA2_570/GetHeroes/v0001/?key=" + SplashActivity.API_KEY + "&language=en_us";
 
         new DownloadHeroesTask().execute(url);
 

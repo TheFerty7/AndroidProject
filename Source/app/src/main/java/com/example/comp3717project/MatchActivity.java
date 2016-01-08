@@ -29,6 +29,7 @@ import java.util.TimeZone;
 
 public class MatchActivity extends AppCompatActivity {
 
+    private static final int API_RETRY_NUMBER =10;
     TextView matchID;
     TextView startTime;
     TextView radiantWin;
@@ -135,15 +136,30 @@ public class MatchActivity extends AppCompatActivity {
         return result;
     }
 
-    private class DownloadWebpageTask extends AsyncTask<String, Void, String> {
+    private class DownloadWebpageTask extends AsyncTask<String, String, String> {
         @Override
         protected String doInBackground(String... urls) {
-            try {
-                return downloadUrl(urls[0]);
-            } catch (Exception e) {
-                Log.e("Problem", e.getMessage());
-                return "error404";
+            String result = null;
+
+            for (int i = 0; i < API_RETRY_NUMBER; i++) {
+                try {
+                    result = downloadUrl(urls[0]);
+                } catch (Exception e) {
+                    Log.e("Problem", e.getMessage());
+                    result = "error404";
+                }
+
+                if (!result.equals("error404") || result.length() > 100)
+                    break;
+                else
+                    publishProgress("Unable to retrieve data from API. Retry " + (i + 1) + " time");
             }
+            return result;
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            Toast.makeText(getApplicationContext(), values[0], Toast.LENGTH_SHORT).show();
         }
 
         // onPostExecute displays the results of the AsyncTask.
@@ -151,35 +167,36 @@ public class MatchActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             try {
                 if (result.equalsIgnoreCase("error404"))
-                    Toast.makeText(getApplicationContext(), "Unable to retrieve from API", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "API is not working at the moment. Please comeback later", Toast.LENGTH_LONG).show();
+                else {
+                    // Start json parser
+                    JSONObject json = new JSONObject(result);
 
-                // Start json parser
-                JSONObject json = new JSONObject(result);
+                    matchID.setText("Match ID\t" + json.getJSONObject("result").getString("match_id"));
 
-                matchID.setText("Match ID\t" + json.getJSONObject("result").getString("match_id"));
+                    // Format UNIX timestamps into date
+                    Date date = new Date(json.getJSONObject("result").getLong("start_time") * 1000L); // *1000 is to convert seconds to milliseconds
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z"); // the format of your date
+                    sdf.setTimeZone(TimeZone.getTimeZone("GMT-8")); // give a timezone reference for formating (see comment at the bottom
+                    String formattedDate = sdf.format(date);
 
-                // Format UNIX timestamps into date
-                Date date = new Date(json.getJSONObject("result").getLong("start_time") * 1000L); // *1000 is to convert seconds to milliseconds
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z"); // the format of your date
-                sdf.setTimeZone(TimeZone.getTimeZone("GMT-8")); // give a timezone reference for formating (see comment at the bottom
-                String formattedDate = sdf.format(date);
+                    startTime.setText("Start Time\t" + formattedDate);
 
-                startTime.setText("Start Time\t" + formattedDate);
-
-                radiantWin.setText((json.getJSONObject("result").getBoolean("radiant_win") ? "RADIANT VICTORY" : "DIRE VICTORY"));
+                    radiantWin.setText((json.getJSONObject("result").getBoolean("radiant_win") ? "RADIANT VICTORY" : "DIRE VICTORY"));
 
 
-                JSONArray player = json.getJSONObject("result").getJSONArray("players");
+                    JSONArray player = json.getJSONObject("result").getJSONArray("players");
 
-                playerIdArray = new String[player.length()];
-                heroIdArray = new String[player.length()];
+                    playerIdArray = new String[player.length()];
+                    heroIdArray = new String[player.length()];
 
-                for (int i = 0; i < player.length(); i++) {
-                    playerIdArray[i] = player.getJSONObject(i).getString("account_id");
-                    heroIdArray[i] = player.getJSONObject(i).getString("hero_id");
+                    for (int i = 0; i < player.length(); i++) {
+                        playerIdArray[i] = player.getJSONObject(i).getString("account_id");
+                        heroIdArray[i] = player.getJSONObject(i).getString("hero_id");
+                    }
+
+                    initPLayerList();
                 }
-
-                initPLayerList();
             } catch (Exception ex) {
                 Log.d("Problem", ex.getMessage());
             }
