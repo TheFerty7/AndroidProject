@@ -61,11 +61,11 @@ public class MainActivity extends AppCompatActivity {
 
             String[] items = new String[]{"Recent", "Heroes", "Items"};
 
-            ArrayList<String> itemList = new ArrayList<String>();
+            ArrayList<String> itemList = new ArrayList<>();
 
             itemList.addAll(Arrays.asList(items));
 
-            listAdapter = new ArrayAdapter<String>(this, R.layout.row, itemList);
+            listAdapter = new ArrayAdapter<>(this, R.layout.row, itemList);
 
             mainListView.setAdapter(listAdapter);
 
@@ -119,8 +119,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void initRecentGames() {
         ListView lv = (ListView) findViewById(R.id.listView4);
-        ArrayList<String> gameList = new ArrayList<String>();
-        ArrayList<String> dataList = new ArrayList<String>();
+        ArrayList<String> gameList = new ArrayList<>();
+        ArrayList<String> dataList = new ArrayList<>();
 
         // Assign SQLite select parameters
         SQLiteDatabase db = new AppDatabaseHelper(this).getReadableDatabase();
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
 
         idList = gameList;
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row2, dataList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.row, dataList);
 
         lv.setAdapter(adapter);
 

@@ -24,10 +24,12 @@ import java.net.URL;
 
 public class SplashActivity extends Activity {
 
-    public static String API_KEY = "12C01D8A57DFF90DB5C355DC37FDAB56";
-    public static int MATCH_REQUEST = 100;
-    public static int MIN_PLAYER = 10;
-    private final int LOADING_TIME = 3;
+    public static final String API_KEY = "12C01D8A57DFF90DB5C355DC37FDAB56";
+    public static final int MATCH_REQUEST = 100;
+    public static final int MIN_PLAYER = 10;
+    private static final int APP_WAIT_TIME = 3;
+    private static final int LOADING_TIME = 3;
+
     private SQLiteOpenHelper helper;
     private TextView status;
     private ConnectivityManager cm;
@@ -144,12 +146,11 @@ public class SplashActivity extends Activity {
                                 long seq_num = matches.getJSONObject(i).getLong("match_seq_num");
                                 String start_time = matches.getJSONObject(i).getString("start_time");
                                 String lobby_type = matches.getJSONObject(i).getString("lobby_type");
-
-                                Log.d("Match_", id + " seq_" + seq_num + " start_" + start_time + " lobby_" + lobby_type);
-
                                 ((AppDatabaseHelper) helper).insertMatch(helper.getWritableDatabase(), id, seq_num, start_time, lobby_type);
                             }
-                            for (int i = 5; i > 0; i--) {
+                            Log.d("SQLite", "Added " + matches.length() + " records into the database");
+
+                            for (int i = APP_WAIT_TIME; i > 0; i--) {
                                 publishProgress("Application starts in " + i + " sec");
                                 Thread.sleep(1000);
                             }

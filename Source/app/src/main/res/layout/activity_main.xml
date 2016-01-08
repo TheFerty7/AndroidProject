@@ -3,8 +3,8 @@
     android:id="@+id/home_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.comp3717project.MainActivity"
-    android:background="@color/red">
+    android:background="@color/red"
+    tools:context="com.example.comp3717project.MainActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -23,22 +23,14 @@
             android:text="Recent Games"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <LinearLayout
+        <ListView
+            android:id="@+id/listView4"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <ListView
-                android:id="@+id/listView4"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="110dp" />
-
-        </LinearLayout>
-
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="110dp" />
     </RelativeLayout>
 
     <ListView

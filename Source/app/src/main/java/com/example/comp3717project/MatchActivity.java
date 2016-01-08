@@ -1,6 +1,5 @@
 package com.example.comp3717project;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -35,6 +34,7 @@ public class MatchActivity extends AppCompatActivity {
     TextView radiantWin;
     private String[] playerIdArray;
     private String[] heroIdArray;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,13 +81,15 @@ public class MatchActivity extends AppCompatActivity {
     public void initPLayerList() {
         ListView lv = (ListView) findViewById(R.id.playerListView);
 
-        ArrayList<String> gameList = new ArrayList<String>();
+        ArrayList<String> gameList = new ArrayList<>();
 
         for (int i = 0; i < playerIdArray.length; i++) {
-            gameList.add(i, "Player " + (i + 1) + "\t\t" + "ID: " + playerIdArray[i]);
+            gameList.add(i, ((i < 5) ? "Team 1" : "Team 2") + " - " +
+                    "Player " + ((i < 5) ? (i + 1) : ((i - 4))) + " - " +
+                    "ID: " + playerIdArray[i]);
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row, gameList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.row, gameList);
 
         lv.setAdapter(adapter);
     }

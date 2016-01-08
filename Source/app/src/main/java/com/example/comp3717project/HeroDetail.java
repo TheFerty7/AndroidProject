@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
 public class HeroDetail extends AppCompatActivity {
 
@@ -17,8 +16,6 @@ public class HeroDetail extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hero_detail);
-
-        Toast.makeText(getApplicationContext(), "EXTRA LOADING TIME", Toast.LENGTH_LONG).show();
 
         String urlStart = "http://dota2.gamepedia.com/";
 
