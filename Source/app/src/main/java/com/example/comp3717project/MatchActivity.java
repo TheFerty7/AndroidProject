@@ -7,8 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -92,21 +90,6 @@ public class MatchActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row, gameList);
 
         lv.setAdapter(adapter);
-
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent(MainActivity.this, MatchActivity.class);
-//                intent.putExtra("id", recentGameIDArray[position]);
-//                startActivity(intent);
-                Intent intent = new Intent(MatchActivity.this, PlayerDetail.class);
-                intent.putExtra("id", MainActivity.heroNames[position]);
-                intent.putExtra("2step", true);
-                intent.putExtra("match", matchID.getText());
-                startActivity(intent);
-            }
-        });
-
     }
 
     /*
@@ -166,7 +149,7 @@ public class MatchActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             try {
                 if (result.equalsIgnoreCase("error404"))
-                    Toast.makeText(getApplicationContext(), "Unable to retrieve web page at the moment", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Unable to retrieve from API", Toast.LENGTH_LONG).show();
 
                 // Start json parser
                 JSONObject json = new JSONObject(result);

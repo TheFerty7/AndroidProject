@@ -1,11 +1,10 @@
 package com.example.comp3717project;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.app.Activity;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
 public class PlayerDetail extends Activity {
 
@@ -15,8 +14,6 @@ public class PlayerDetail extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player_detail);
-
-        Toast.makeText(getApplicationContext(), "EXTRA LOADING TIME", Toast.LENGTH_LONG).show();
 
         String urlStart = "http://dota2.gamepedia.com/";
 

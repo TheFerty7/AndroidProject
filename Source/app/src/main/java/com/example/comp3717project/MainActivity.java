@@ -29,11 +29,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     public static String[] heroNames;
     public static String[] heroIDs;
-
+    ArrayList<String> idList;
     private ActionBarDrawerToggle dToggle;
     private DrawerLayout dLayout;
     private ListView mainListView;
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toast.makeText(getApplicationContext(), "Hold on it's loading", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Loading", Toast.LENGTH_SHORT).show();
         // Call to API and retrieve match data
         String url = "https://api.steampowered.com/IEconDOTA2_570/GetHeroes/v0001/?key=F7EB0CA4154233ABB155C2C98DEF9D02&language=en_us";
 
@@ -83,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
                         Intent intent = new Intent(MainActivity.this, Items.class);
                         startActivity(intent);
                     }
-
                 }
             });
 
@@ -119,6 +119,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void initRecentGames() {
         ListView lv = (ListView) findViewById(R.id.listView4);
+        ArrayList<String> gameList = new ArrayList<String>();
+        ArrayList<String> dataList = new ArrayList<String>();
 
         // Assign SQLite select parameters
         SQLiteDatabase db = new AppDatabaseHelper(this).getReadableDatabase();
@@ -129,32 +131,33 @@ public class MainActivity extends AppCompatActivity {
                 AppDatabaseHelper.MATCH_LOBBY
         };
         Cursor c = db.query(AppDatabaseHelper.MATCH_TABLE, tableColumns, null, null,
-                null, null, null, "10");
+                null, null, AppDatabaseHelper.MATCH_ID + " DESC", "10");
         if (c != null) {
             if (c.moveToFirst())
                 do {
-                    for (int i = 0; i < c.getColumnCount(); i++) {
-                        Log.d("Record", " " + c.getString(i));
-                    }
+                    gameList.add(c.getString(0));
+                    Date date = new Date(Long.parseLong(c.getString(2)) * 1000L); // *1000 is to convert seconds to milliseconds
+                    Date date1 = new java.util.Date();
+                    long diff = date1.getTime() - date.getTime();
+                    dataList.add("Match " + c.getString(0) + ": " + (diff / 1000 / 60) + " minutes ago");
                 } while (c.moveToNext());
         }
 
-//        ArrayList<String> gameList = new ArrayList<String>();
-//
-//        gameList.addAll(Arrays.asList(recentGameIDArray));
-//`
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row, gameList);
-//
-//        lv.setAdapter(adapter);
-//
-//        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent(MainActivity.this, MatchActivity.class);
-//                intent.putExtra("id", recentGameIDArray[position]);
-//                startActivity(intent);
-//            }
-//        });
+        idList = gameList;
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row, dataList);
+
+        lv.setAdapter(adapter);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, MatchActivity.class);
+                String cid = idList.get(position);
+                intent.putExtra("id", cid);
+                startActivity(intent);
+            }
+        });
     }
 
     private void setUpDrawer() {
@@ -163,14 +166,6 @@ public class MainActivity extends AppCompatActivity {
         };
         dToggle.setDrawerIndicatorEnabled(true);
         dLayout.setDrawerListener(dToggle);
-    }
-
-
-    /**s
-     * <p>Loading data methods.</p>
-     */
-    private void loadRecentMatchDataFromDatabase() {
-
     }
 
     private String downloadUrl(String myurl) throws Exception {
@@ -226,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             try {
                 if (result.equalsIgnoreCase("error404"))
-                    Toast.makeText(getApplicationContext(), "Unable to retrieve web page at the moment", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Unable to retrieve from API", Toast.LENGTH_LONG).show();
 
                 // Start json parser
                 JSONObject json = new JSONObject(result);
